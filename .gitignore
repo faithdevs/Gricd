@@ -1,0 +1,7 @@
+node_modules
+*.env
+*.rest
+*.txt
+my_*
+Collections.txt
+references.txt

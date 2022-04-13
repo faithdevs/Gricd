@@ -4,13 +4,15 @@ const jwt = require('jsonwebtoken');
 const AdminModel = require('../models/admin')
 const jwtHelpers = require('../helpers/jwt_helper')
 const response = require('../utils/response')
+const validation = require('../validations/index')
+const {checkRequestErrs} = require('../validations/errorcheck')
 
 adminRouter.get("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, async (req, res) => {
     res.send("OK")
 })
 
 //Sign up 
-adminRouter.post("/signup", (req, res) => {
+adminRouter.post("/signup", validation.createAdmin, checkRequestErrs, (req, res) => {
     const reqUsername = req.body.username;
     const reqPassword = req.body.password;
 
@@ -40,7 +42,7 @@ adminRouter.get("/login", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req
 });
 
 //Login and send Access Token + Refresh Token
-adminRouter.post("/login", async (req, res) => {
+adminRouter.post("/login", validation.signIn, checkRequestErrs, async (req, res) => {
     const reqUsername = req.body.username;
     const reqPassword = req.body.password;
 

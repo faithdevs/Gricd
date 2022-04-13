@@ -2,6 +2,8 @@ const express = require('express');
 const AuthorModel = require('../models/author')
 const jwtHelpers = require('../helpers/jwt_helper')
 const authorRouter = express.Router();
+const validation = require('../validations/index')
+const {checkRequestErrs} = require('../validations/errorcheck')
 
 /* Get All Authors no need for Authentication */
 authorRouter.get("/", async (req, res) => {
@@ -49,7 +51,7 @@ authorRouter.get("/:author_id", (req, res) => {
 })
 
 /* Insert new Author need Authentication */
-authorRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req, res) => {
+authorRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.createAuthor, checkRequestErrs, (req, res) => {
     const authorInfo = {
         fname: req.body.fname,
         lname: req.body.lname, //optional
@@ -63,7 +65,7 @@ authorRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req, r
 })
 
 /* Update Author with ID need Authentication */
-authorRouter.patch("/:author_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req, res) => {
+authorRouter.patch("/:author_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.findAuthor, checkRequestErrs, (req, res) => {
     const id = req.params.author_id;
     const newAuthorInfo = {
         ...(req.body.fname ? { fname: req.body.fname } : {}),

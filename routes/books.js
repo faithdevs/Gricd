@@ -2,6 +2,8 @@ const express = require('express')
 const bookRouter = express.Router()
 const jwtHelpers = require('../helpers/jwt_helper')
 const BookModel = require('../models/book')
+const validation = require('../validations/index')
+const {checkRequestErrs} = require('../validations/errorcheck')
 
 /* Get All Books no need for Authentication */
 bookRouter.get("/", async (req, res) => {
@@ -39,7 +41,7 @@ bookRouter.get("/:book_id", (req, res) => {
         .catch((err) => { return res.status(500).end() })
 })
 /* Insert new Book need Authentication */
-bookRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, async (req, res) => {
+bookRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.createBook, checkRequestErrs, async (req, res) => {
     const bookInfo = {
         name: req.body.name,
         ...(req.body.photo ? { photo: req.body.photo } : {}), //optional
@@ -57,7 +59,7 @@ bookRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, async (re
 })
 
 /* Update Book with ID need Authentication */
-bookRouter.patch("/:book_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, async (req, res) => {
+bookRouter.patch("/:book_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.findBook, checkRequestErrs, async (req, res) => {
     const id = req.params.book_id;
     const newBookInfo = {
         ...(req.body.name ? { name: req.body.name } : {}),

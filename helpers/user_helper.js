@@ -39,28 +39,8 @@ removeBookFromShelf = async (res, userId, bookid)=>{
 }
 
 
-findBookAtUser = async (res, userid, bookid)=>{
-    try{
-       result = await UserModel.findOne({
-            _id: mongoose.Types.ObjectId(userid),
-            "bookshelf.bookId": mongoose.Types.ObjectId(bookid)
-        },
-        {"bookshelf":{$elemMatch: { bookId: mongoose.Types.ObjectId(bookid) } } }
-        )
-        .then((doc)=>{
-            if(doc) return doc 
-            else return -2
-        })
-        .catch((err)=>{if(err) {res.sendStatus(424); console.log("[X] [await catch deleteReview\]:\n====================\n"); return -1}})
-        return result
-    }catch(exception){
-        res.sendStatus(503)
-        return -1
-    }
-}
 
 module.exports = {
     addBook, 
     removeBookFromShelf,
-    findBookAtUser
 }

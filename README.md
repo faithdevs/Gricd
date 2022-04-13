@@ -39,6 +39,9 @@ Before starting to clone repository, it's better to read and know **Node JS**, *
 -The the endpoints to /POST requires authentication and authorization. 
 -While the endpoints to /GET doesnt require authentication
 
+### Postman Documentation
+[![postman doc] (https://documenter.getpostman.com/view/12575851/UVyuQuaQ)}
+
 ## Getting Started
 -  Clone this repository
 -   `npm install`  to install node.js in CMD / Terminal

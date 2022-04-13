@@ -2,6 +2,8 @@ const express = require('express')
 const categoryRouter = express.Router()
 const jwtHelpers = require('../helpers/jwt_helper')
 const CategoryModel = require('../models/category')
+const validation = require('../validations/index')
+const {checkRequestErrs} = require('../validations/errorcheck')
 
 /* Get All Categories no need for Authentication */
 
@@ -49,7 +51,7 @@ categoryRouter.get('/:categoryid', (req, res, next) => {
 })
 
 /* Insert new Categories need Authentication */
-categoryRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req, res) => {
+categoryRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.createCategory, checkRequestErrs,(req, res) => {
     const categoryInfo = {
         name: req.body.name,
         photo: req.body.photo //optional
@@ -65,7 +67,7 @@ categoryRouter.post("/", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, (req,
 })
 
 /* Update Categories with ID need Authentication */
-categoryRouter.patch("/:category_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, async (req, res) => {
+categoryRouter.patch("/:category_id", jwtHelpers.verifyAccessToken, jwtHelpers.isAdmin, validation.findCategory, checkRequestErrs, async (req, res) => {
     const id = req.params.category_id;
     const newCategoryInfo = {
         name: req.body.name,
